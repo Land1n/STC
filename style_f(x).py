@@ -253,7 +253,7 @@ class PlotManager:
         ax.grid(True)
         plt.show()
 
-
+"""
 if __name__ == "__main__":
     pm = PlotManager()
 
@@ -283,6 +283,6 @@ if __name__ == "__main__":
         yticks=None,
         ask_input=False #True, если надо вводить скопированные столбцы
     )
-
+"""
     # Для запроса ввода через консоль:
     # pm.plot(x_column=None, ask_input=True)
