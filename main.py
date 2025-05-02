@@ -1,17 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from  generationSignal import triangular_pulse
 
-plt.style.use('_mpl-gallery')
+t,g = triangular_pulse(peak_time=2, rise_angle=np.pi/4, 
+                         fall_angle=np.pi/6, A=1.5)
+plt.plot(t,g)
 
-# make data
-y = [4.8, 5.5, 3.5, 4.6, 6.5, 6.6, 2.6, 3.0]
-
-# plot
-fig, ax = plt.subplots()
-
-ax.stairs(y, linewidth=2.5)
-
-ax.set(xlim=(0, 8), xticks=np.arange(1, 8),
-       ylim=(0, 8), yticks=np.arange(1, 8))
-
+plt.xlabel('Время')
+plt.ylabel('Амплитуда')
+plt.grid(True)
+plt.legend()
 plt.show()
+
+
