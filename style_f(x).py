@@ -69,6 +69,7 @@ class PlotManager:
         """
         Построение графика.
         Если ask_input=True и data не передан, запрашивает ввод через консоль.
+        Если x_column=None, создает автоматические точки по оси X (1, 2, 3, ...).
         labels - список или словарь с названиями для легенды.
         """
 
@@ -92,10 +93,12 @@ class PlotManager:
                 print(f"Ошибка при чтении данных: {e}")
                 return
 
+        # Если данных нет, завершаем
         if data is None:
             print("Данные не переданы и ask_input=False, построение невозможно.")
             return
 
+        # Если данные - словарь, преобразуем в DataFrame
         if isinstance(data, dict):
             try:
                 data = pd.DataFrame(data)
@@ -103,7 +106,13 @@ class PlotManager:
                 print(f"Ошибка при преобразовании словаря в DataFrame: {e}")
                 return
 
-        if x_column not in data.columns:
+        # Проверяем наличие столбца x_column или создаем автоматические точки
+        if x_column is None:
+            # Создаем автоматические точки по оси X (1, 2, 3, ...)
+            max_len = max(len(data[col]) for col in data.columns)
+            data['auto_x'] = np.arange(1, max_len + 1)
+            x_column = 'auto_x'
+        elif x_column not in data.columns:
             print(f"Ошибка: столбец '{x_column}' отсутствует в данных. Доступные столбцы: {list(data.columns)}")
             return
 
@@ -122,9 +131,11 @@ class PlotManager:
                 return
             y_columns = [y_column]
 
+        # Преобразуем столбцы Y в числовой формат
         for col in y_columns:
             data[col] = pd.to_numeric(data[col], errors='coerce')
 
+        # Удаляем строки с NaN в x_column
         data = data.dropna(subset=[x_column])
 
         # Обработка labels для легенды
@@ -141,6 +152,7 @@ class PlotManager:
             print("Ошибка: labels должен быть списком, кортежем или словарём")
             return
 
+        # Подготовка стилей
         color_styles = [
             'b', 'g', 'r', 'c', 'm', 'y', 'k', 'darkorange', 'purple', 'saddlebrown', 'hotpink', 'gray'
         ]
@@ -214,6 +226,7 @@ class PlotManager:
                 step = 10 * magnitude
             return step
 
+        # Настройка xticks
         if xticks is None:
             x_min, x_max = ax.get_xlim()
             step_x = nice_step(x_max - x_min)
@@ -225,6 +238,7 @@ class PlotManager:
             start_x = xstart if xstart is not None else x_min
             ax.set_xticks(np.arange(start_x, x_max + xticks, xticks))
 
+        # Настройка yticks
         if yticks is None:
             y_min, y_max = ax.get_ylim()
             step_y = nice_step(y_max - y_min)
@@ -239,32 +253,36 @@ class PlotManager:
         ax.grid(True)
         plt.show()
 
-"""
+
 if __name__ == "__main__":
     pm = PlotManager()
-    # Пример с данными в виде словаря
+
+    # Пример с передачей словаря
     data_dict = {
-        'x': [1, 2, 3, 4, 5],
+        #'x': [1,3,5,8,9],
         'y1': [2, 3, 5, 7, 11],
         'y2': [1, 4, 6, 8, 10]
     }
+    df = pm.load_data(data=data_dict)
 
-    # Запуск с запросом ввода данных через консоль
+    # Построение графиков с автоматическими точками по оси X
     pm.plot(
-        data=data_dict,# None, если хотим использовать скопированные данные
-        x_column='x', #0, если хотим введееные через консоль данные
+        data=df, #None, для скопированных данных
+        x_column=None,  # None, для автоматического расположения точек, 0 для скопированных данных
         y_column=None,
         labels={'y1': 'График 1', 'y2': 'График 2'},
-        title='',
-        xlabel='Ось X',
-        ylabel='Ось Y',
+        title='Графики с автоматической осью X',
+        xlabel='Номер точки',
+        ylabel='Значение',
         marker='triangle_up',
         color='blue',
         linewidth=1.5,
-        xstart=None,
+        xstart=0,
         ystart=None,
         xticks=None,
         yticks=None,
-        ask_input=False # True, что бы использовать консольные данные
+        ask_input=False #True, если надо вводить скопированные столбцы
     )
-"""
+
+    # Для запроса ввода через консоль:
+    # pm.plot(x_column=None, ask_input=True)
