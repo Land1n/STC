@@ -4,6 +4,7 @@ import pandas as pd
 import io
 import math
 
+
 class PlotManager:
     def __init__(self):
         self.set_default_styles()
