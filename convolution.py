@@ -53,7 +53,6 @@ data_dict = {
         #'y2': b
     }
 df = pm.load_data(data=data_dict)
-
 # Построение графиков с автоматическими точками по оси X
 pm.plot(
         data=df, #None, для скопированных данных
