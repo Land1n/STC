@@ -43,7 +43,7 @@ def rectangular_pulse(start=0, duration=1, amplitude=1,
     """
     # Определение временного диапазона
     if t_start is None:
-        t_start = start - 2*duration
+        t_start = start - 3*duration
     if t_end is None:
         t_end = start + 3*duration
         
@@ -114,7 +114,7 @@ def triangular_pulse(peak_time=0, rise_angle=None, fall_angle=None, A=1,
 
     return t, triangular
 
-def generate_barker_code(length):
+def generate_barker_code(length,amplitude = 1,frequency = 100,phase = 0,sample_rate = 10000,t_start=None, t_end=None):
     """
     Генерирует последовательность кода Баркера для заданной длины.
 
@@ -123,11 +123,16 @@ def generate_barker_code(length):
     Аргументы:
         length (int): Длина требуемого кода Баркера
 
-    Возвращает:
-        list: Список из элементов +1/-1, представляющий код Баркера
-
     Вызывает:
         ValueError: Если запрошена неподдерживаемая длина
+
+    # Параметры сигнала
+
+    amplitude = 1      # Амплитуда (Вольты)
+    frequency = 100       # Частота (Герцы)
+    phase = 0            # Начальная фаза (радианы)
+    sample_rate = 1000  # Частота дискретизации (Гц)   
+
     """
     barker_sequences = {
         2: [1, -1],
@@ -145,5 +150,32 @@ def generate_barker_code(length):
             f"Допустимые длины: {list(barker_sequences.keys())}"
         )
 
-    return barker_sequences[length].copy()
+        # Определение временного диапазона
+    period = 1/frequency 
+    duration = period*length
 
+    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+
+    harmonic1 = amplitude * np.sin(2 * np.pi * frequency * t + phase)
+    harmonic2 = amplitude * np.sin(2 * np.pi * frequency * t + (phase + np.pi))
+
+    signal = harmonic1
+    i = 0
+    for start_time in np.arange(0, duration, period):
+            end_time = start_time + period
+            if barker_sequences[length][i] == 1:
+                signal[(t >= start_time) & (t < end_time)] = harmonic2[(t >= start_time) & (t < end_time)]
+            i+=1
+    return t,signal
+
+
+if __name__ == "__main__":
+    import matplotlib.pyplot as plt
+    c = 11 
+    t,signal = generate_barker_code(c)
+    plt.plot(t, signal)  
+    plt.title(f'Код Баркера {c}')
+    plt.xlabel('Время (с)')
+    plt.ylabel('Амплитуда')
+    plt.grid(True)
+    plt.show()
