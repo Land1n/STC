@@ -185,7 +185,7 @@ def generate_barker_code(length,start=0,amplitude = 1,frequency = 100,phase = 0,
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     c = 7 
-    t,signal = generate_barker_code(c)
+    t,signal = generate_barker_code(c,start=2)
     plt.plot(t, signal)  
     plt.title(f'Код Баркера {c}')
     plt.xlabel('Время (с)')
