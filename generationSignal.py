@@ -114,7 +114,7 @@ def triangular_pulse(peak_time=0, rise_angle=None, fall_angle=None, A=1,
 
     return t, triangular
 
-def generate_barker_code(length,amplitude = 1,frequency = 100,phase = 0,sample_rate = 10000,t_start=None, t_end=None):
+def generate_barker_code(length,start=0,amplitude = 1,frequency = 100,phase = 0,sample_rate = 10000,t_start=None, t_end=None):
     """
     Генерирует последовательность кода Баркера для заданной длины.
 
@@ -151,27 +151,40 @@ def generate_barker_code(length,amplitude = 1,frequency = 100,phase = 0,sample_r
         )
 
         # Определение временного диапазона
+
+
+        
     period = 1/frequency 
     duration = period*length
+    
+    if t_start is None:
+        t_start = start - duration
+    if t_end is None:
+        t_end = start + duration
 
-    t = np.linspace(0, duration, int(sample_rate * duration), endpoint=False)
+    t = np.linspace(t_start, t_end, int(sample_rate * duration))
 
     harmonic1 = amplitude * np.sin(2 * np.pi * frequency * t + phase)
     harmonic2 = amplitude * np.sin(2 * np.pi * frequency * t + (phase + np.pi))
 
     signal = harmonic1
     i = 0
-    for start_time in np.arange(0, duration, period):
+    for start_time in np.arange(start, start+duration, period):
+            if i == duration-1:
+                break
             end_time = start_time + period
-            if barker_sequences[length][i] == 1:
-                signal[(t >= start_time) & (t < end_time)] = harmonic2[(t >= start_time) & (t < end_time)]
+            try:
+                if barker_sequences[length][i] == 1:
+                    signal[(t >= start_time) & (t < end_time)] = harmonic2[(t >= start_time) & (t < end_time)]
+            except IndexError:
+                pass
             i+=1
     return t,signal
 
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    c = 11 
+    c = 7 
     t,signal = generate_barker_code(c)
     plt.plot(t, signal)  
     plt.title(f'Код Баркера {c}')
