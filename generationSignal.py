@@ -48,14 +48,14 @@ def rectangular_pulse(start=0, duration=1, amplitude=1,
         t_end = start + 3*duration
         
     # Создание временной оси
-    t = np.linspace(t_start, t_end, fs)
+    t = np.linspace(t_start, t_end, int((duration-start)*fs) )
     
     # Создание прямоугольного импульса
-    pulse = np.zeros_like(t)
-    mask = (t >= start) & (t <= start + duration)
-    pulse[mask] = amplitude
+    pulse = np.where((t >= start) & (t <= (start + duration)), A, 0)
 
     return t, pulse
+
+
 def triangular_pulse(peak_time=0, rise_angle=None, fall_angle=None, A=1, 
                     t_start=None, t_end=None, fs=1000):
     """
@@ -113,3 +113,37 @@ def triangular_pulse(peak_time=0, rise_angle=None, fall_angle=None, A=1,
     triangular[right_mask] = A - right_slope * (t[right_mask] - peak_time)
 
     return t, triangular
+
+def generate_barker_code(length):
+    """
+    Генерирует последовательность кода Баркера для заданной длины.
+
+    Поддерживаемые длины: 2, 3, 4, 5, 7, 11, 13.
+
+    Аргументы:
+        length (int): Длина требуемого кода Баркера
+
+    Возвращает:
+        list: Список из элементов +1/-1, представляющий код Баркера
+
+    Вызывает:
+        ValueError: Если запрошена неподдерживаемая длина
+    """
+    barker_sequences = {
+        2: [1, -1],
+        3: [1, 1, -1],
+        4: [1, 1, 1, -1],
+        5: [1, 1, 1, -1, 1],
+        7: [1, 1, 1, -1, -1, 1, -1],
+        11: [1, 1, 1, -1, -1, -1, 1, -1, -1, 1, -1],
+        13: [1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 1]
+    }
+
+    if length not in barker_sequences:
+        raise ValueError(
+            f"Неподдерживаемая длина кода Баркера: {length}. "
+            f"Допустимые длины: {list(barker_sequences.keys())}"
+        )
+
+    return barker_sequences[length].copy()
+

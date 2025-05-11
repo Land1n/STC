@@ -87,7 +87,7 @@ duration = 1.0  # Длительность (сек)
 
 t1, signal1 = generate_signal(freq=50, duration=duration, sampling_rate=fs)
 
-t2, signal2 = generate_signal(freq=20, duration=duration, sampling_rate=fs)
+t2, signal2 = generate_signal(freq=25, duration=duration, sampling_rate=fs)
 
 result_signal = signal1 * signal2 
 
