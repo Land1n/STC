@@ -11,7 +11,7 @@ class PlotManager:
 
     def set_default_styles(self):
         plt.rcParams['font.family'] = 'serif'
-        plt.rcParams['font.size'] = 12.0
+        plt.rcParams['font.size'] = 16.0
         plt.rcParams['font.serif'] = ['Times New Roman']
         plt.rcParams['axes.linewidth'] = 1.0
         plt.rcParams['axes.grid'] = True
