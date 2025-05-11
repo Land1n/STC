@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.fft import fft, fftfreq, fftshift
 
 def compute_spectrum(signal, sampling_rate=1.0):
     """
@@ -13,8 +14,8 @@ def compute_spectrum(signal, sampling_rate=1.0):
         Массив амплитуд соответствующих частот.
     """    
     n = len(signal)
-    fft_result = np.fft.fft(signal)
+    fft_result = fft(signal)
     amplitudes = np.abs(fft_result) / n
-    frequencies = np.fft.fftshift(np.fft.fftfreq(n, d=1/sampling_rate))
-    amplitudes = np.fft.fftshift(amplitudes)
+    frequencies = fftshift(fftfreq(n, d=1/sampling_rate))
+    amplitudes = fftshift(amplitudes)
     return frequencies, amplitudes

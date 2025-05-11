@@ -16,12 +16,12 @@ def gaussian_pulse(μ=0, σ=1, A=1, t_start=None, t_end=None, fs=1000):
     
     # Определение диапазона времени, если не задано
     if t_start is None:
-        t_start = μ - 5 * σ
+        t_start = μ - 3*σ
     if t_end is None:
-        t_end = μ + 5 * σ
+        t_end = μ + 3*σ
     
     # Создание временной оси
-    t = np.linspace(t_start, t_end, fs)
+    t = np.linspace(t_start, t_end, int(fs*(t_end-t_start)),endpoint=False)
     
     # Формула гауссовского импульса
     gaussian = A * np.exp(-(t - μ)**2 / (2 * σ**2))
@@ -43,12 +43,12 @@ def rectangular_pulse(start=0, duration=1, amplitude=1,
     """
     # Определение временного диапазона
     if t_start is None:
-        t_start = start - 3*duration
+        t_start = start - 10*duration
     if t_end is None:
-        t_end = start + 3*duration
+        t_end = start + 10*duration
         
     # Создание временной оси
-    t = np.linspace(t_start, t_end, int((duration-start)*fs) )
+    t = np.linspace(t_start, t_end, int((t_end-t_start)*fs) )
     
     # Создание прямоугольного импульса
     pulse = np.where((t >= start) & (t <= (start + duration)), A, 0)
@@ -158,9 +158,9 @@ def generate_barker_code(length,start=0,amplitude = 1,frequency = 100,phase = 0,
     duration = period*length
     
     if t_start is None:
-        t_start = start - duration
+        t_start = 0
     if t_end is None:
-        t_end = start + duration
+        t_end = duration
 
     t = np.linspace(t_start, t_end, int(sample_rate * duration))
 
@@ -184,8 +184,8 @@ def generate_barker_code(length,start=0,amplitude = 1,frequency = 100,phase = 0,
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
-    c = 7 
-    t,signal = generate_barker_code(c,start=2)
+    c = 11 
+    t,signal = generate_barker_code(c)
     plt.plot(t, signal)  
     plt.title(f'Код Баркера {c}')
     plt.xlabel('Время (с)')
