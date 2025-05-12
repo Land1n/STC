@@ -162,7 +162,7 @@ def generate_barker_code(length,start=0,amplitude = 1,frequency = 100,phase = 0,
     if t_end is None:
         t_end = duration
 
-    t = np.linspace(t_start, t_end, int(sample_rate * duration))
+    t = np.linspace(0, duration, int(sample_rate * duration))
 
     harmonic1 = amplitude * np.sin(2 * np.pi * frequency * t + phase)
     harmonic2 = amplitude * np.sin(2 * np.pi * frequency * t + (phase + np.pi))
