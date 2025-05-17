@@ -1,6 +1,5 @@
  %generationSignalWithNegativeFrequencies.m
 % Генерация кода Баркера, гармонического сигнала и построение спектров с отрицательными частотами
-
 clear; close all; clc;
 
 % Параметры
