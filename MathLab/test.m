@@ -275,3 +275,4 @@ function plot_spectrum_subplot(signal, fs, ttl)
     ylim([0 max(mag)*1.1]);
     grid on;
 end
+ 
