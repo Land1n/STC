@@ -1,6 +1,6 @@
 function noisy_signal = add_awgn_noise(signal, snr_db)
 % add_awgn_noise - добавляет аддитивный белый гауссовский шум (AWGN) к сигналу
-%
+
 % Входные параметры:
 %   signal - входной сигнал (вектор)
 %   snr_db - желаемое отношение сигнал/шум в децибелах
