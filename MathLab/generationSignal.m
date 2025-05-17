@@ -149,7 +149,7 @@ if ~isKey(barker_sequences, length_code)
     error(['Неподдерживаемая длина кода Баркера: ', num2str(length_code), ...
         '. Допустимые длины: 2,3,4,5,7,11,13']);
 end
-
+ 
 sequence = barker_sequences(length_code);
 period = 1 / frequency;
 duration = period * length_code;
