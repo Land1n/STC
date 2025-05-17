@@ -23,3 +23,4 @@ function [frequencies, amplitudes] = compute_spectrum(signal, sampling_rate)
     % Сдвиг спектра, чтобы нулевая частота была в центре
     amplitudes = fftshift(amplitudes);
 end
+ 
